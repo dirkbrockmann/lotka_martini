@@ -27,12 +27,12 @@ const load = function (container_id,config=cfg) {
 // setting up the controls and actions
 	
 	setup_controls(controls,grid); // this adds the actual widgets to the control panel, and connects controls to the parameters for later access
-	
-	setup_interactions(display,controls,config); // this connects actions to the widgets, like starting the simulation, pausing it, resetting variables, anything connected to the change of a widget state.
+
+	setup_interactions(display,controls,grid,config); // this connects actions to the widgets, like starting the simulation, pausing it, resetting variables, anything connected to the change of a widget state.
 
 // initializing the system
-	
-	setup_simulation(display,config)
+
+	setup_simulation(display,controls,grid,config)
 	
 }
 

@@ -3,16 +3,16 @@
 // of visualization which are done in viz.js
 
 import param from "./parameters.js"
-import {each,range,map,mean} from "lodash-es"
-import {rad2deg,deg2rad} from "./utils"
+import {each,filter} from "lodash-es"
+import * as lattices from "lattices"
 
 const L = param.L;
-const dt = param.dt;
 
 // typically objects needed for the explorable
 // are defined here
 
 var agents = [];
+var trajectory = [];
 
 // the initialization function, this is bundled in simulation.js with the initialization of
 // the visualization and effectively executed in index.js when the whole explorable is loaded
@@ -23,16 +23,27 @@ const initialize = () => {
 	param.timer={}; param.tick=0;
 
 	// make agents
-
-	const N = param.number_of_particles.choices[param.number_of_particles.widget.value()];
+	const N = param.lattice.widget.value()==1 ? param.N.hex : param.N.square
+	const s = lattices[param.lattice.widget.value()==1?"hex":"square"](N)
+		.boundary(param.boundary)
 	
-	agents = map(range(N), i => { return {
-				index:i, 
-				x:L*Math.random(), 
-				y:L*Math.random(),
-				theta: 2*Math.PI*Math.random(),
-			} 
-	});
+	agents = s.nodes;
+	
+	each(agents,a=>{
+		const X = Math.random()
+		if(X < param.initial_prey + param.initial_predator) {
+			if (X < param.initial_prey){
+				a.state = "prey"
+			} else {
+				a.state = "predator"
+			}
+		} else {
+			a.state="empty";
+		}
+
+	})
+	
+	trajectory = [{t:param.tick,x:filter(agents,a=>a.state=="prey").length,y:filter(agents,a=>a.state=="predator").length}]
 	
 };
 
@@ -44,32 +55,53 @@ const go  = () => {
 	
 	param.tick++;
 	
-	each(agents,a=>{
+	const prey = filter(agents,d=>d.state=="prey");
+	const predator = filter(agents,d=>d.state=="predator");
+	
+	//const lattice_correct = param.lattice.widget.value()==0 ? 1 : 8.0 / 6.0
+	
+	const alpha = param.prey_reproduction_rate.widget.value();
+	const beta =  param.prey_death_rate.widget.value();
+	const gamma = param.predator_reproduction_rate.widget.value();
+	const delta = param.predator_death_rate.widget.value();
+
+	each(prey,d=>{
+		const n = d.neighbors[Math.floor(Math.random()*d.neighbors.length)];
+		if (n.state=="empty" && Math.random()<alpha) {n.state="prey"};
+	})
+	
+	each(prey,d=>{
+		if(Math.random()<beta){ d.state="empty"}
+	})
+	
+	each(prey,d=>{
 		
-		var dx = dt*param.speed.widget.value()*Math.cos(a.theta);
-		var dy = dt*param.speed.widget.value()*Math.sin(a.theta);
-		
-		const x_new = a.x + dx;
-		const y_new = a.y + dy;
-		
-		if (x_new < 0) {dx+=L};
-		if (y_new < 0) {dy+=L};
-		if (x_new > L) {dx-=L};
-		if (y_new > L) {dy-=L};  
-		
-		a.x += dx;
-		a.y += dy;
-		
-		var neighbors = agents.filter(d =>  (d.x-a.x)**2 + (d.y-a.y)**2 <= param.interaction_radius.widget.value()**2 )
-		
-		var mx = mean(map(neighbors,x=> Math.cos(deg2rad(x.theta))));
-		var my = mean(map(neighbors,x=> Math.sin(deg2rad(x.theta))));	
-		
-		a.theta = rad2deg(Math.atan2(my,mx))
-		
-		a.theta += deg2rad(param.wiggle.widget.value())*(Math.random()-0.5)
+		const n_pred = filter(d.neighbors,n=>n.state=="predator").length;
+		const n_pairs = n_pred*(n_pred-1)/2;
+		const total_probability = 1 - (1-gamma)**n_pairs;
+		//const total_probability = n_pairs > 1 ? gamma : 0;
+				
+		d.next_state = Math.random()<total_probability ? "predator" : "prey"
 		
 	})
+	
+	each(prey,d=>{
+		d.state = d.next_state
+	})
+	
+	each(predator,d=>{
+		if(Math.random()<delta){ d.state="empty"}
+	})
+	
+	if (param.tick>param.T_relax){
+		trajectory.push({t:param.tick,x:filter(agents,a=>a.state=="prey").length,y:filter(agents,a=>a.state=="predator").length})
+	} else {
+		trajectory = [{t:param.tick,x:filter(agents,a=>a.state=="prey").length,y:filter(agents,a=>a.state=="predator").length}]
+	}
+	
+	if (trajectory.length>param.T_trajectory) {
+		trajectory.shift()
+	}
 	
 }
 
@@ -85,4 +117,4 @@ const update = () => {
 
 // the three functions initialize, go and update are exported, also all variables
 // that are required for the visualization
-export {agents,initialize,go,update}
+export {agents,trajectory,initialize,go,update}

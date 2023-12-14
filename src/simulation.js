@@ -5,19 +5,20 @@
 import {initialize as model_init, update as model_update, go as model_go} from "./model.js"
 import {initialize as visual_init, update as visual_update, go as visual_go} from "./viz.js"
 
-function iterate (display,config) {
+function iterate (display,controls,config) {
 	model_go();
-	visual_go(display,config);
+	visual_go(display,controls,config);
 };
 
-function initialize (display,config) {	
+function initialize (display,controls,grid,config) {	
 	model_init();
-	visual_init(display,config); 
+
+	visual_init(display,controls,grid,config); 
 };
 
-function update (display,config) {
+function update (display,controls,config) {
 	model_update();
-	visual_update(display,config);
+	visual_update(display,controls,config);
 }
 
 export {iterate,initialize,update}
