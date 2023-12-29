@@ -5,7 +5,7 @@
 
 export default { 
 	widgets:{
-		fontsize:18,
+//		fontsize:18,
 		slider_size: 400,
 		slider_show: true,
 		slider_gap : 1.5,

@@ -3,10 +3,11 @@
 // be passed to the load() method defined in index.js.
 
 export default {
+	id:"lotka_martini",
 	display_type:"canvas", // either svg or canvas depending on explorable
 	debug:false,  // if set to true, draws dots on the control panel to help widget placement
-	controls_border:false,
-	display_border:false,
+	controls_border:"",
+	display_border:"",
 	debug_lattice:"debug-grid-16",
 	controls_grid:{nx:12,ny:12},
 	display_size: {width:5*201,height:5*201},
