@@ -75,11 +75,6 @@ const initialize = (display,controls,grid,config) => {
 	
 };
 
-// the go function, this is bundled in simulation.js with the go function of
-// the model, typically this is the iteration function of the model that
-// is run in the explorable. It contains the code that updates the parts of the display
-// panel as a function of the model quantities.
-
 const go = (display,controls,config) => {
 	
 	ctx.clearRect(0, 0, W, H);
@@ -87,14 +82,8 @@ const go = (display,controls,config) => {
 	cartoon_update(controls)
 }
 
-// the update function is usually not required for running the explorable. Sometimes
-// it makes sense to have it, e.g. to update the visualization, if a parameter is changed,
-// e.g. a radio button is pressed, when the system is not running, e.g. when it is paused.
 
-const update = (display,controls,config) => {
-	
-	
-}
+const update = (display,controls,config) => {}
 
 
 export {initialize,go,update}

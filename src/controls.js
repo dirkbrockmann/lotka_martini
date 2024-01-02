@@ -1,35 +1,20 @@
-// this sets up the controls in the control panel
-// it adds the widgets to the container and generates attaches the widget to the 
-// variables and parameters defined in parameters.js
-
 import * as widgets from "d3-widgets"
 import {range,map,toPairs} from "lodash-es"
-
 import cfg from "./config.js"
 import parameters from "./parameters.js"
-
 import {toArray,add_id_label,add_widget,get_variables,get_booleans,get_choices} from "./utils.js"
-
-
-// defined variables for variables, booleans and choices, extracting the information from parameters.js
+import styles from "./styles.module.css"
 
 const variables = get_variables(parameters);
-//const booleans = get_booleans(parameters);
 const choices = get_choices(parameters);
 
-// adding ids and labels to the variables based on names for the variables, see utils.js for the function add_id_label
 
 add_id_label(variables)
-//add_id_label(booleans)
 add_id_label(choices)
 
-// making arrays for the three types of parameters
-
 const va = toArray(variables);
-//const bo = toArray(booleans);
 const ch = toArray(choices);
 
-// making the slider widgets objects, based on the variables
 
 const sliders = map(va,
 		v => widgets.slider()
@@ -40,22 +25,8 @@ const sliders = map(va,
 					.size(cfg.widgets.slider_size)
 					.girth(cfg.widgets.slider_girth)
 					.knob(cfg.widgets.slider_knob)
-				//	.fontsize(cfg.widgets.fontsize)
-
 		);
 
-// making the toggle widgets objects, based on the switches
-		
-// const toggles = map(bo,
-// 		v => widgets.toggle()
-// 					.id(v.id).
-// 					label(v.label).
-// 					value(v.default)
-// 					.fontsize(cfg.widgets.fontsize)
-// 		);
-
-// making the radio widgets objects, based on the choices
-		
 const radios = map(ch, 
 		v => widgets.radio()
 					.choices(v.choices)
@@ -63,53 +34,33 @@ const radios = map(ch,
 					.value(v.default)
 					.orientation(cfg.widgets.radio_orientation)
 					.labelposition(cfg.widgets.radio_label_position)
-					//.fontsize(cfg.widgets.fontsize)
 		);
 
 
 
-// you can remove some of these, if the explorable doesn't have a subset of parameters,
-// e.g. if the explorable doesn't need toggles, you can remove all the toggle stuff
 
-
-// this is handy, because the actual widgets are connected to the associated parameters
-// this is important, if one wants to access the widgets based on parameters.
-		
-//add_widget(bo,toggles);
 add_widget(va,sliders);
 add_widget(ch,radios);
 
-
-// This is generic for many explorables, the action buttons, play/pause, back and rewind
-// there are some explorables that have different buttons, so one needs to code this here.
 
 const go = widgets.button().actions(["play","pause"])
 const setup = widgets.button().actions(["back"])
 const reset = widgets.button().actions(["rewind"])
 
-// all the buttons in an array
-		
 const buttons = [go,setup,reset];
-
-// here's the important function accessible to the outside, there's flexibility on how
-// to code this. bottomline is that all the widgets get attached to the controls panel,
-// that is provided as an argument. the grid object is also passed, which makes it easier
-// to place the widgets on the grid. The positional stuff here needs to be adapted
-// to the needs of the explorable
 
 export default (controls,grid)=>{
 
 	const sl_pos=grid.position(cfg.widgets.slider_anchor.x,range(sliders.length)
 			.map(x=>(cfg.widgets.slider_anchor.y+cfg.widgets.slider_gap*x)));
 	
-//	const tg_pos=grid.position(cfg.widgets.toggle_anchor.x,cfg.widgets.toggle_anchor.y);	
-
-	const ra_pos=grid.position(cfg.widgets.radio_anchor.x,cfg.widgets.radio_anchor.y);		
+	const ra_pos=grid.position(cfg.widgets.radio_anchor.x,cfg.widgets.radio_anchor.y);	
+	
+	const leg_pos=grid.position(range(cfg.widgets.legend.length)
+		.map(x=>(cfg.widgets.legend_anchor.x+cfg.widgets.legend_gap*x)),cfg.widgets.legend_anchor.y);
+		
 	
 	sliders.forEach((sl,i) => sl.position(sl_pos[i]));
-	
-
-//	toggles[0].position(tg_pos).labelposition(cfg.widgets.toggle_label_pos)
 
 	radios[0].position(ra_pos)
 		.size(cfg.widgets.radio_size).shape(cfg.widgets.radio_shape)
@@ -122,14 +73,23 @@ export default (controls,grid)=>{
 	setup.position(grid.position(cfg.widgets.resetbutton_anchor.x,cfg.widgets.resetbutton_anchor.y));
 	
 
-	controls.selectAll(".slider").data(sliders).enter().append(widgets.widget);
-//	controls.selectAll(".toggle").data(toggles).enter().append(widgets.widget);
-	controls.selectAll(".button").data(buttons).enter().append(widgets.widget);
-	controls.selectAll(".radio").data(radios).enter().append(widgets.widget)
+	controls.selectAll(null).data(sliders).enter().append(widgets.widget);
+	controls.selectAll(null).data(buttons).enter().append(widgets.widget);
+	controls.selectAll(null).data(radios).enter().append(widgets.widget);
+	
+	const legend = controls.selectAll(null)
+		.data(cfg.widgets.legend).enter().append("g")
+		.attr("class",styles.legend)
+		.attr("transform",(d,i)=>"translate("+leg_pos[i].x+","+leg_pos[i].y+")")
+
+	legend.append("text").text(d=>d).attr("transform","translate(20,0)")
+	
+	const colors=[cfg.simulation.color.predator,cfg.simulation.color.prey]
+	legend.append("circle").attr("r",10)
+	.attr("cy",-5)
+	.style("fill",((d,i)=>colors[i]))
 
 }
-
-// here are all the exported objects, all the parameters, their associated widgets and the action buttons
 
 export {sliders,radios,go,setup,reset,variables,choices}
 

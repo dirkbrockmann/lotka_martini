@@ -1,0 +1,27 @@
+.plot {
+	font-size:12px;
+	fill:black;
+}
+
+.xlabel {
+	text-anchor:middle;
+}
+
+.curve {
+	stroke-width:3px;
+	fill:none;	
+}
+
+.xaxis{
+	
+}
+
+.yaxis{
+	
+}
+
+.legend  {
+	font-size:16px;
+	alignment-baseline: middle;
+}
+
