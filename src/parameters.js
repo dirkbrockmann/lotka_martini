@@ -16,22 +16,26 @@ export default {
 	
 		predator_reproduction_rate: {
 			range:[0,.5],
-		default:0.26
+		default:0.26,
+			label:"Vermehrungsrate Räuber"
 		},
 		predator_death_rate: {
 			range:[0,0.5],
-		default:0.1
+		default:0.1,
+			label:"Sterberate Räuber"
 		},
 		prey_reproduction_rate:{
 			range : [0,1],
-			default : 0.6
+			default : 0.6,
+			label:"Vermehrungsrate Beute"
 		},
 		prey_death_rate:{
 			range : [0,.1],
-			default : 0
+			default : 0,
+			label:"Sterberate Beute"
 		},
 		lattice : {
-			choices:["square","hexagonal"],
+			choices:["quadrat","hexagon"],
 		default:0
 		}
 }

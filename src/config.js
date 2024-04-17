@@ -22,7 +22,7 @@ export default {
 		radio_shape:"rect",
 		legend_anchor:{x:6,y:4},
 		legend_gap:3.5,
-		legend:["Predator","Prey"]
+		legend:["Räuber","Beute"]
 	},
 	simulation: {
 		delay:0,
@@ -33,6 +33,6 @@ export default {
 		anchor:{x:6,y:3},
 		width:200,
 		height:80,
-		x_label:"time"
+		x_label:"Zeit"
 	}
 }

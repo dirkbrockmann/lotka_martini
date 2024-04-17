@@ -1,13 +1,13 @@
 {
-  "name": "@explorables/lotka_martini",
-  "title": "Lotka Martini",
-  "subtitle": "The Lotka-Volterra model",
+  "name": "lotka_martini",
+  "title": "Fuchs & Hase",
+  "subtitle": "Ein berühmtes Räuber-Beute Modell",
   "version": "1.1.2",
   "license": "CC-BY-4.0",
-  "description": "This explorable illustrates oscillatory dynamics and spatio-temporal patterns in the most famous predator prey model on a lattice.",
+  "description": "Das Explorable zeigt die Dynamik eines einfachen Räuber-Beute Modells, des sogenannten Lotka-Volterra Modells. Auf einem Gitter zeigt das Modell komplexe Muster und Oszillationen bei bestimmten Parameterwerten.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dirkbrockmann/lotka_martini.git"
+    "url": "git+https://github.com/dirkbrockmann/lotka_martini.git#cosmo"
   },
   "author": "Dirk Brockmann (https://rocs.hu-berlin.de)",
   "main": "./dist/index.js",
