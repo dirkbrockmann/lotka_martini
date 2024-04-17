@@ -2,7 +2,7 @@
   "name": "@explorables/lotka_martini",
   "title": "Lotka Martini",
   "subtitle": "The Lotka-Volterra model",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "license": "CC-BY-4.0",
   "description": "This explorable illustrates oscillatory dynamics and spatio-temporal patterns in the most famous predator prey model on a lattice.",
   "repository": {
