@@ -25,7 +25,7 @@ export default {
 		legend:["Predator","Prey"]
 	},
 	simulation: {
-		delay:0,
+		delay:10,
 		color:{predator:"#800220",prey:"#d1ba23",empty:"#f1eae4"},
 		legend_symbol_size:20
 	},
