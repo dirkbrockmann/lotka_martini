@@ -4,7 +4,7 @@
   "subtitle": "The Lotka-Volterra model",
   "description": "This explorable illustrates oscillatory dynamics and spatio-temporal patterns in the most famous predator prey model on a lattice.",
   "author": "Dirk Brockmann (https://synosy.github.io)",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "license": "CC-BY-4.0",
   "repository": {
     "type": "git",
